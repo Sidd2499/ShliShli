@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu,menu);
+        MenuItem searchItem=menu.findItem(R.id.btn_search);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -71,6 +75,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
             startActivity(intent);
             FirebaseAuth.getInstance().signOut();
+        }
+        if(item.getItemId()==R.id.btn_search)
+        {
+            Log.d("Search","Search is selected");
+            Intent intent=new Intent(MainActivity.this,SearchActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

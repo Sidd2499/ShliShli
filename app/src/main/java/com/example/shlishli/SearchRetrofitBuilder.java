@@ -21,7 +21,7 @@ public class SearchRetrofitBuilder {
                 if(instance==null)
                 {
                     instance=new Retrofit.Builder()
-                            .baseUrl("http://172.16.20.12:8081/")
+                            .baseUrl("http://172.16.26.33:8081/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .client(new OkHttpClient())
                             .build();
