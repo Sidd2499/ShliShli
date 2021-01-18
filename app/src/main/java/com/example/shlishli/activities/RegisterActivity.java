@@ -47,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
         tvClickToSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                Intent intent=new Intent(RegisterActivity.this,EnterDetailsActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -87,7 +87,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
                     Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                    Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                    Intent intent=new Intent(RegisterActivity.this,EnterDetailsActivity.class);
                     startActivity(intent);
                     finish();
                 }
