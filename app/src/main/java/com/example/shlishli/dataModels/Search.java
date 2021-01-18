@@ -1,4 +1,4 @@
-package com.example.shlishli;
+package com.example.shlishli.dataModels;
 
 import com.google.gson.annotations.SerializedName;
 

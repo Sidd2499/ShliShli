@@ -6,8 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.example.shlishli.activities.LoginActivity;
+import com.example.shlishli.activities.SearchActivity;
+import com.example.shlishli.fragments.HomeFragment;
+import com.example.shlishli.fragments.MyAccountFragment;
+import com.example.shlishli.fragments.MyCartFragment;
+import com.example.shlishli.fragments.MyOrdersFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -72,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId()==R.id.it_logout)
         {
             Log.d("LogOut","Logout is selected");
-            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+            Intent intent=new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             FirebaseAuth.getInstance().signOut();
         }
         if(item.getItemId()==R.id.btn_search)
         {
             Log.d("Search","Search is selected");
-            Intent intent=new Intent(MainActivity.this,SearchActivity.class);
+            Intent intent=new Intent(MainActivity.this, SearchActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);

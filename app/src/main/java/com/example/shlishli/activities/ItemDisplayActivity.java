@@ -1,8 +1,10 @@
-package com.example.shlishli;
+package com.example.shlishli.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.shlishli.R;
 
 public class ItemDisplayActivity extends AppCompatActivity {
 
