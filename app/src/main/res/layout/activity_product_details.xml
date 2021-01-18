@@ -19,7 +19,6 @@
         android:id="@+id/cardView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
         app:cardBackgroundColor="#EAEBEB"
         app:cardCornerRadius="24dp"
         app:cardElevation="8dp"
@@ -33,7 +32,7 @@
             android:layout_margin="24dp">
 
             <ImageView
-                android:id="@+id/iv_productImage"
+                android:id="@+id/iv_productImageptile"
                 android:layout_width="0dp"
                 android:layout_height="200dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +50,7 @@
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_productImage" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_productImageptile" />
 
             <TextView
                 android:id="@+id/tv_productSize"
@@ -102,21 +101,15 @@
         android:id="@+id/btn_add_to_cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="#F83434"
+        android:paddingLeft="25dp"
+        android:paddingRight="25dp"
         android:text="Add To Cart"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline3"
-        app:layout_constraintTop_toBottomOf="@+id/rv_Merchants" />
-
-    <Button
-        android:id="@+id/btn_product_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/guideline3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rv_Merchants" />
+        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_Merchants"
@@ -127,8 +120,9 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_add_to_cart" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

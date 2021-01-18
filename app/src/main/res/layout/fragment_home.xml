@@ -34,6 +34,7 @@
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_category_shoes"
                         android:layout_width="100dp"
                         android:layout_height="70dp"
                         android:layout_marginBottom="5dp"
@@ -55,6 +56,7 @@
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_category_sandals"
                         android:layout_width="100dp"
                         android:layout_height="70dp"
                         android:layout_marginBottom="5dp"
@@ -76,6 +78,7 @@
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_category_flipflops"
                         android:layout_width="100dp"
                         android:layout_height="70dp"
                         android:layout_marginBottom="5dp"
@@ -97,6 +100,7 @@
                     android:orientation="vertical">
 
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/iv_category_slippers"
                         android:layout_width="100dp"
                         android:layout_height="70dp"
                         android:layout_marginBottom="5dp"
@@ -119,6 +123,7 @@
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:layout_width="100dp"
+                        android:id="@+id/iv_category_crocs"
                         android:layout_height="70dp"
                         android:layout_marginBottom="5dp"
                         android:src="@mipmap/crocs" />

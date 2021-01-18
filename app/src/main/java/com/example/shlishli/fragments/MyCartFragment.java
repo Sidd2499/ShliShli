@@ -3,12 +3,19 @@ package com.example.shlishli.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.shlishli.R;
+import com.example.shlishli.adapters.MyCartAdapter;
+import com.example.shlishli.dataModels.CartItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +64,29 @@ public class MyCartFragment extends Fragment {
         }
     }
 
+    private RecyclerView myCartRecyclerView;
+    private List<CartItem> cartItemList=new ArrayList<>();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+        cartItemList.add(new CartItem());
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_cart, container, false);
+        View view=inflater.inflate(R.layout.fragment_my_cart, container, false);
+        myCartRecyclerView=view.findViewById(R.id.mycart_recycler_view);
+        MyCartAdapter myCartAdapter=new MyCartAdapter(cartItemList);
+        myCartRecyclerView.setHasFixedSize(true);
+        myCartRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        myCartRecyclerView.setAdapter(myCartAdapter);
+        return view;
     }
 }

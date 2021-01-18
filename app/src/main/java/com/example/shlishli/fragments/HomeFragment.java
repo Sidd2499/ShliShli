@@ -1,5 +1,6 @@
 package com.example.shlishli.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.shlishli.R;
+import com.example.shlishli.activities.CategoryActivity;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,10 +61,57 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    private CircleImageView categoryShoes;
+    private CircleImageView categorySlippers;
+    private CircleImageView categoryCrocs;
+    private CircleImageView categorySandals;
+    private CircleImageView categoryFlipFlops;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view=inflater.inflate(R.layout.fragment_home, container, false);
+        categoryShoes=view.findViewById(R.id.iv_category_shoes);
+        categoryCrocs=view.findViewById(R.id.iv_category_crocs);
+        categoryFlipFlops=view.findViewById(R.id.iv_category_flipflops);
+        categorySandals=view.findViewById(R.id.iv_category_sandals);
+        categorySlippers=view.findViewById(R.id.iv_category_slippers);
+        categoryShoes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(view.getContext(), CategoryActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+        categoryCrocs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(view.getContext(), CategoryActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+        categorySandals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(view.getContext(), CategoryActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+        categorySlippers.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(view.getContext(), CategoryActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+        categoryFlipFlops.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(view.getContext(), CategoryActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
+
+        return view;
     }
 }

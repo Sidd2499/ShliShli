@@ -12,9 +12,9 @@ import android.widget.EditText;
 
 import com.example.shlishli.R;
 import com.example.shlishli.adapters.SearchRecyclerAdapter;
-import com.example.shlishli.apiCalls.ISearchApi;
+import com.example.shlishli.apiCalls.IApiCalls;
 import com.example.shlishli.dataModels.Search;
-import com.example.shlishli.retrofit.SearchRetrofitBuilder;
+import com.example.shlishli.retrofit.networkManager.RetrofitBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +46,9 @@ public class SearchActivity extends AppCompatActivity {
 
     private void searchInit() {
         String searchQuery=etSeearchQuery.getText().toString();
-        Retrofit retrofit= SearchRetrofitBuilder.getInstance();
-        ISearchApi iSearchApi=retrofit.create(ISearchApi.class);
-        Call<List<Search>> responses=iSearchApi.getPosts(searchQuery);
+        Retrofit retrofit= RetrofitBuilder.getInstance();
+        IApiCalls iApiCalls =retrofit.create(IApiCalls.class);
+        Call<List<Search>> responses= iApiCalls.getPosts(searchQuery);
         responses.enqueue(new Callback<List<Search>>() {
             @Override
             public void onResponse(Call<List<Search>> call, Response<List<Search>> response) {
@@ -62,6 +62,7 @@ public class SearchActivity extends AppCompatActivity {
                      recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
                      recyclerView.setAdapter(searchRecyclerAdapter);
                      searchRecyclerAdapter.notifyDataSetChanged();
+                     searchRecyclerAdapter.notify();
                 }
             }
 
