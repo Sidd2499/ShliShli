@@ -1,4 +1,4 @@
-package com.example.shlishli;
+package com.example.shlishli.adapters;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.shlishli.R;
+import com.example.shlishli.dataModels.Search;
 
 import java.util.List;
 

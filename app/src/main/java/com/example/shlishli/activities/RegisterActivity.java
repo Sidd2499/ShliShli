@@ -1,4 +1,4 @@
-package com.example.shlishli;
+package com.example.shlishli.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shlishli.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -47,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         tvClickToSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(RegisterActivity.this,EnterDetailsActivity.class);
+                Intent intent=new Intent(RegisterActivity.this, EnterDetailsActivity.class);
                 startActivity(intent);
                 finish();
             }

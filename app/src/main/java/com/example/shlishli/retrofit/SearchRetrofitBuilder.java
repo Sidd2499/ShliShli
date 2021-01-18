@@ -1,4 +1,4 @@
-package com.example.shlishli;
+package com.example.shlishli.retrofit;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

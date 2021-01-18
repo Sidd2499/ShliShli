@@ -1,4 +1,6 @@
-package com.example.shlishli;
+package com.example.shlishli.apiCalls;
+
+import com.example.shlishli.dataModels.Search;
 
 import java.util.List;
 

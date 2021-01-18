@@ -1,4 +1,4 @@
-package com.example.shlishli;
+package com.example.shlishli.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,6 +13,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.shlishli.MainActivity;
+import com.example.shlishli.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -74,7 +76,7 @@ public class LoginActivity extends AppCompatActivity {
         tvRegisterhere.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
+                Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -102,7 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this, "Sign In Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent=new Intent(LoginActivity.this,EnterDetailsActivity.class);
+                    Intent intent=new Intent(LoginActivity.this, EnterDetailsActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -171,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser!=null)
         {
-            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
