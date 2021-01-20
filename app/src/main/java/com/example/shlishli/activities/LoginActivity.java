@@ -19,6 +19,7 @@ import com.example.shlishli.MainActivity;
 import com.example.shlishli.R;
 import com.example.shlishli.apiCalls.IApiCalls;
 import com.example.shlishli.dataModels.Customer;
+import com.example.shlishli.dataModels.UserActivity;
 import com.example.shlishli.retrofit.networkManager.RetrofitBuilder;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -78,13 +79,10 @@ public class LoginActivity extends AppCompatActivity {
             signInWithEmailAndPassword();
             progressBar.setVisibility(View.VISIBLE);
         });
-        tvRegisterhere.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        tvRegisterhere.setOnClickListener(v -> {
+            Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+            finish();
         });
 
     }
@@ -102,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             etLoginPassword.setError("Password cannot be empty");
             return;
         }
+
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -113,11 +112,13 @@ public class LoginActivity extends AppCompatActivity {
 
                     checkIfUserDetailsAreAvailable();
 
+
+
                 }
                 else
                 {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(LoginActivity.this, "Error while Sign In", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Error while Sign In"+task.getException(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -176,18 +177,51 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Customer> call, Response<Customer> response) {
 
-                if(!response.body().equals(null)) {
+                Customer customer = response.body();
+
+
+                if(customer.getFirstName() != null) {
                     SharedPreferences sharedPreferences = getSharedPreferences("shlishli", Context.MODE_PRIVATE);
 
                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                    editor.putInt("userId", response.body().getCustomerId());
+                    editor.putInt("userId", customer.getCustomerId());
                     editor.putString("firebaseUserId", response.body().getFirebaseCustomerId());
+                    editor.putString("name",response.body().getFirstName());
+                    editor.putString("email",FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    editor.putString("footSize",response.body().getFootSize());
 
                     editor.apply();
                     editor.commit();
 
-                    Toast.makeText(LoginActivity.this, "Welcome to ShliShli " + response.body().getFirstName(), Toast.LENGTH_SHORT).show();
+                    UserActivity userActivity = new UserActivity();
+
+                    userActivity.setCustomerId(new Long(customer.getCustomerId()));
+
+                    Call<Void> logUserActivity = iApiCalls.logUserActivity(userActivity);
+
+                    logUserActivity.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Toast.makeText(LoginActivity.this, "Welcome to ShliShli " + customer.getFirstName(), Toast.LENGTH_SHORT).show();
+
+                            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(LoginActivity.this, "This session is not recorded" + customer.getFirstName(), Toast.LENGTH_SHORT).show();
+
+
+                            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+
 
                 }
 

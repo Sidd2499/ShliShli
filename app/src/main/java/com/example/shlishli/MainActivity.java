@@ -6,7 +6,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -33,9 +35,6 @@ public class MainActivity extends AppCompatActivity {
         FrameLayout frameLayout=(FrameLayout)findViewById(R.id.frame_layout);
         toolbar=findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setHomeButtonEnabled(true);
-        //setSupportActionBar((Toolbar) findViewById(R.id.my_toolbar));
         FragmentTransaction fragmentTransaction=getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.frame_layout,new HomeFragment()).commit();
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -76,9 +75,23 @@ public class MainActivity extends AppCompatActivity {
         if(item.getItemId()==R.id.it_logout)
         {
             Log.d("LogOut","Logout is selected");
+
+            FirebaseAuth.getInstance().signOut();
+
+            //remove the shared preferences storage keys
+            SharedPreferences sharedPreferences= getSharedPreferences("shlishli", Context.MODE_PRIVATE);
+
+            sharedPreferences.edit().remove("userId").commit();
+            sharedPreferences.edit().remove("firebaseUserId").commit();
+            sharedPreferences.edit().remove("name").commit();
+            sharedPreferences.edit().remove("email").commit();
+            sharedPreferences.edit().remove("footSize").commit();
+
+
+
             Intent intent=new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
-            FirebaseAuth.getInstance().signOut();
+
         }
         if(item.getItemId()==R.id.btn_search)
         {

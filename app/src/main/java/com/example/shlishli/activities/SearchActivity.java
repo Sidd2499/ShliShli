@@ -15,6 +15,7 @@ import com.example.shlishli.adapters.SearchRecyclerAdapter;
 import com.example.shlishli.apiCalls.IApiCalls;
 import com.example.shlishli.dataModels.Search;
 import com.example.shlishli.retrofit.networkManager.RetrofitBuilder;
+import com.example.shlishli.retrofit.networkManager.SearchRetrofitBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         etSeearchQuery=(EditText)findViewById(R.id.et_search_query);
-        btnSearch=(Button)findViewById(R.id.btn_search);
+        btnSearch=(Button)findViewById(R.id.btn_search_action);
         recyclerView=(RecyclerView)findViewById(R.id.search_recycler_view);
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,9 +47,10 @@ public class SearchActivity extends AppCompatActivity {
 
     private void searchInit() {
         String searchQuery=etSeearchQuery.getText().toString();
-        Retrofit retrofit= RetrofitBuilder.getInstance();
+        Retrofit retrofit= SearchRetrofitBuilder.getInstance();
         IApiCalls iApiCalls =retrofit.create(IApiCalls.class);
         Call<List<Search>> responses= iApiCalls.getPosts(searchQuery);
+
         responses.enqueue(new Callback<List<Search>>() {
             @Override
             public void onResponse(Call<List<Search>> call, Response<List<Search>> response) {

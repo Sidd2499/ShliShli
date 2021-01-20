@@ -17,6 +17,7 @@ import com.example.shlishli.MainActivity;
 import com.example.shlishli.R;
 import com.example.shlishli.apiCalls.IApiCalls;
 import com.example.shlishli.dataModels.Customer;
+import com.example.shlishli.dataModels.UserActivity;
 import com.example.shlishli.retrofit.networkManager.RetrofitBuilder;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -115,15 +116,41 @@ public class EnterDetailsActivity extends AppCompatActivity {
 
                 editor.putInt("userId",customer.getCustomerId());
                 editor.putString("firebaseUserId", customer.getFirebaseCustomerId());
+                editor.putString("name",customer.getFirstName());
+                editor.putString("email",firebaseAuth.getCurrentUser().getEmail());
+                editor.putString("footSize",customer.getFootSize());
 
                 editor.apply();
                 editor.commit();
 
+                UserActivity userActivity = new UserActivity();
 
-                Toast.makeText(EnterDetailsActivity.this, "Welcome to ShliShli "+ customer.getFirstName() , Toast.LENGTH_SHORT).show();
+                userActivity.setCustomerId(new Long(customer.getCustomerId()));
 
-                Intent intent=new Intent(EnterDetailsActivity.this, MainActivity.class);
-                startActivity(intent);
+                Call<Void> logUserActivity = iApiCalls.logUserActivity(userActivity);
+
+                logUserActivity.enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        Toast.makeText(EnterDetailsActivity.this, "Welcome to ShliShli " + customer.getFirstName(), Toast.LENGTH_SHORT).show();
+
+                        Intent intent=new Intent(EnterDetailsActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Toast.makeText(EnterDetailsActivity.this, "This session is not recorded" + customer.getFirstName(), Toast.LENGTH_SHORT).show();
+
+
+                        Intent intent=new Intent(EnterDetailsActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+
+
             }
 
             @Override
