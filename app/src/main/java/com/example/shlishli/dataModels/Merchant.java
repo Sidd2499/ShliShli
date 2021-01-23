@@ -7,17 +7,17 @@ public class Merchant {
     @SerializedName("merchantId")
     private Long merchantId;
 
-    @SerializedName("name")
+    @SerializedName("merchantName")
     private String name;
 
     @SerializedName("rating")
     private Long rating;
 
-    @SerializedName("double")
-    private Double price;
+    @SerializedName("price")
+    private int price;
 
 
-    public Merchant(Long merchantId, String name, Long rating, Double price){
+    public Merchant(Long merchantId, String name, Long rating, int price){
         this. merchantId = merchantId;
         this.name = name;
         this.rating = rating;
@@ -48,11 +48,11 @@ public class Merchant {
         this.rating = rating;
     }
 
-    public Double getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 }

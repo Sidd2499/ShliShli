@@ -1,44 +1,52 @@
 package com.example.shlishli.fragments;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.shlishli.R;
+import com.example.shlishli.activities.LoginActivity;
+import com.example.shlishli.adapters.MyCartAdapter;
+import com.example.shlishli.adapters.MyOrderAdapter;
+import com.example.shlishli.apiCalls.IApiCalls;
+import com.example.shlishli.dataModels.OrderItem;
+import com.example.shlishli.retrofit.networkManager.RetrofitBuilder;
+import com.google.firebase.auth.FirebaseAuth;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MyOrdersFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
 public class MyOrdersFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private List<OrderItem> orderItems;
+
+
+    private RecyclerView myOrdersRecyclerView;
 
     public MyOrdersFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MyOrdersFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static MyOrdersFragment newInstance(String param1, String param2) {
         MyOrdersFragment fragment = new MyOrdersFragment();
         Bundle args = new Bundle();
@@ -55,12 +63,82 @@ public class MyOrdersFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_my_orders, container, false);
+
+
+
+
+        View view=inflater.inflate(R.layout.fragment_my_orders, container, false);
+
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        if(firebaseAuth.getCurrentUser() == null){
+            // show a dialog and make the intent to login screen
+            Toast.makeText(view.getContext(), "Please Sign In to Continue", Toast.LENGTH_SHORT).show();
+
+            Intent goToSignInPage = new Intent(view.getContext(), LoginActivity.class);
+            startActivity(goToSignInPage);
+
+
+
+        }
+        else{
+            getOrderItems(view);
+
+            myOrdersRecyclerView = view.findViewById(R.id.myOrdersRecyclerView);
+        }
+
+
+
+
+
+        return view;
+    }
+
+
+    private void getOrderItems(View view){
+        Retrofit retrofitBuilder = RetrofitBuilder.getInstance();
+        IApiCalls iApiCalls = retrofitBuilder.create(IApiCalls.class);
+
+
+        SharedPreferences sharedPreferences= getContext().getSharedPreferences("shlishli", Context.MODE_PRIVATE);
+
+
+
+
+
+        Call<List<OrderItem>> responses = iApiCalls.getCustomerOrders(new Long(sharedPreferences.getInt("userId", 0)));
+
+
+        responses.enqueue(new Callback<List<OrderItem>>() {
+            @Override
+            public void onResponse(Call<List<OrderItem>> call, Response<List<OrderItem>> response) {
+               orderItems = response.body();
+
+                if(orderItems.size() > 0){
+
+
+                    MyOrderAdapter myOrderAdapter=new MyOrderAdapter(orderItems);
+                    myOrdersRecyclerView.setHasFixedSize(true);
+                    myOrdersRecyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+                    myOrdersRecyclerView.setAdapter(myOrderAdapter);
+                }
+                else{
+                    Toast.makeText(getContext(), "You have no orders! Feel free to explore our Market Place!", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<OrderItem>> call, Throwable t) {
+
+            }
+        });
     }
 }

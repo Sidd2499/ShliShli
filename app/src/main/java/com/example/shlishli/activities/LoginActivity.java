@@ -3,7 +3,9 @@ package com.example.shlishli.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -15,6 +17,10 @@ import android.widget.Toast;
 
 import com.example.shlishli.MainActivity;
 import com.example.shlishli.R;
+import com.example.shlishli.apiCalls.IApiCalls;
+import com.example.shlishli.dataModels.Customer;
+import com.example.shlishli.dataModels.UserActivity;
+import com.example.shlishli.retrofit.networkManager.RetrofitBuilder;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -27,6 +33,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -50,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         googlesSignInBtn=(Button)findViewById(R.id.btn_google_login);
         etLoginEmail=(EditText)findViewById(R.id.et_login_email);
         etLoginPassword=(EditText)findViewById(R.id.et_login_password);
-        btnLogin=(Button)findViewById(R.id.btn_enter_details);
+        btnLogin=(Button)findViewById(R.id.btn_login_enter_details);
         tvRegisterhere=(TextView) findViewById(R.id.tv_register_here);
        // getSupportActionBar().hide();
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -58,28 +69,20 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
         mGoogleSignInClient= GoogleSignIn.getClient(this,gso);
-        googlesSignInBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                signIn();
-            }
+
+        googlesSignInBtn.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            signIn();
         });
 
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signInWithEmailAndPassword();
-                progressBar.setVisibility(View.VISIBLE);
-            }
+        btnLogin.setOnClickListener(v -> {
+            signInWithEmailAndPassword();
+            progressBar.setVisibility(View.VISIBLE);
         });
-        tvRegisterhere.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        tvRegisterhere.setOnClickListener(v -> {
+            Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+            finish();
         });
 
     }
@@ -97,6 +100,7 @@ public class LoginActivity extends AppCompatActivity {
             etLoginPassword.setError("Password cannot be empty");
             return;
         }
+
         mAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -104,13 +108,17 @@ public class LoginActivity extends AppCompatActivity {
                 {
                     progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this, "Sign In Successful", Toast.LENGTH_SHORT).show();
-                    Intent intent=new Intent(LoginActivity.this, EnterDetailsActivity.class);
-                    startActivity(intent);
-                    finish();
+
+
+                    checkIfUserDetailsAreAvailable();
+
+
+
                 }
                 else
                 {
-                    Toast.makeText(LoginActivity.this, "Error while Sign In", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(LoginActivity.this, "Error while Sign In"+task.getException(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -125,23 +133,19 @@ public class LoginActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                //Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
-                //Log.w(TAG, "Google sign in failed", e);
-                // ...
+
                 Toast.makeText(this,"Failed to authenticate "+e.getMessage().toString(), Toast.LENGTH_SHORT).show();
             }
         }
     }
     private void firebaseAuthWithGoogle(String idToken) {
+
         AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -149,22 +153,100 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             progressBar.setVisibility(View.INVISIBLE);
-                            // Sign in success, update UI with the signed-in user's information
-                           // Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                           Intent intent=new Intent(LoginActivity.this,EnterDetailsActivity.class);
-                           startActivity(intent);
-                           finish();
-                            //updateUI(user);
+                            checkIfUserDetailsAreAvailable();
                         } else {
                             progressBar.setVisibility(View.INVISIBLE);
-                            // If sign in fails, display a message to the user.
                             Toast.makeText(LoginActivity.this, "Sorry Authentication Failed", Toast.LENGTH_SHORT).show();
                         }
 
-                        // ...
                     }
                 });
+    }
+
+
+    private void checkIfUserDetailsAreAvailable(){
+        Retrofit retrofit = RetrofitBuilder.getInstance();
+        IApiCalls iApiCalls = retrofit.create(IApiCalls.class);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        boolean userDetailsAvailable = false;
+
+        Call<Customer> response = iApiCalls.getUserDetailsByFirebaseUID(user.getUid());
+
+        response.enqueue(new Callback<Customer>() {
+
+            @Override
+            public void onResponse(Call<Customer> call, Response<Customer> response) {
+
+                Customer customer = response.body();
+
+
+                if(customer.getFirstName() != null) {
+                    SharedPreferences sharedPreferences = getSharedPreferences("shlishli", Context.MODE_PRIVATE);
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                    editor.putInt("userId", customer.getCustomerId());
+                    editor.putString("firebaseUserId", response.body().getFirebaseCustomerId());
+                    editor.putString("name",response.body().getFirstName());
+                    editor.putString("email",FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                    editor.putString("footSize",response.body().getFootSize());
+
+                    editor.apply();
+                    editor.commit();
+
+                    UserActivity userActivity = new UserActivity();
+
+                    userActivity.setCustomerId(new Long(customer.getCustomerId()));
+
+                    Call<Void> logUserActivity = iApiCalls.logUserActivity(userActivity);
+
+                    logUserActivity.enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            Toast.makeText(LoginActivity.this, "Welcome to ShliShli " + customer.getFirstName(), Toast.LENGTH_SHORT).show();
+
+                            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(LoginActivity.this, "This session is not recorded" + customer.getFirstName(), Toast.LENGTH_SHORT).show();
+
+
+                            Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    });
+
+
+
+                }
+
+                else {
+                    Toast.makeText(LoginActivity.this, "User Details Not Found, Please Register", Toast.LENGTH_SHORT).show();
+
+                    Intent intent=new Intent(LoginActivity.this, EnterDetailsActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Customer> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "User Details Not Found. Please Register on ShliShli", Toast.LENGTH_SHORT).show();
+
+                // Redirect the user to register on ShliShli
+
+                Intent intent=new Intent(LoginActivity.this, EnterDetailsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
     @Override
@@ -177,6 +259,5 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        //updateUI(currentUser);
     }
 }

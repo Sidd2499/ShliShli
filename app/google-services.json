@@ -1,41 +1,34 @@
 {
   "project_info": {
-    "project_number": "466388959129",
-    "project_id": "shlishli-4393a",
-    "storage_bucket": "shlishli-4393a.appspot.com"
+    "project_number": "536901974242",
+    "firebase_url": "https://shlishli-default-rtdb.firebaseio.com",
+    "project_id": "shlishli",
+    "storage_bucket": "shlishli.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:466388959129:android:fc9ba44318d75945b65d08",
+        "mobilesdk_app_id": "1:536901974242:android:dccc3ae8358f7ea5b406bb",
         "android_client_info": {
           "package_name": "com.example.shlishli"
         }
       },
       "oauth_client": [
         {
-          "client_id": "466388959129-a43mlcfg4eeh8saaam9briue06u18rrv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.shlishli",
-            "certificate_hash": "d93d8f6b9a48fd629bc7a0f6f284304d91d30dbe"
-          }
-        },
-        {
-          "client_id": "466388959129-ispp4tuat6mbmqd6run8voh8073b628a.apps.googleusercontent.com",
+          "client_id": "536901974242-am6jjjlsighidf3b85k991advi123gbr.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAXnOjwkqo5daqtg3ED9PD5Aei69fh6JXw"
+          "current_key": "AIzaSyB2VAtWv0ay9uMGJ8kLjhK66VVT_PhkYTc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "466388959129-ispp4tuat6mbmqd6run8voh8073b628a.apps.googleusercontent.com",
+              "client_id": "536901974242-am6jjjlsighidf3b85k991advi123gbr.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

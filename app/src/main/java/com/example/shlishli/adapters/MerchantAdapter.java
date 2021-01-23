@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.shlishli.R;
 import com.example.shlishli.dataModels.Merchant;
+import com.example.shlishli.dataModels.MerchantDetails;
 import com.example.shlishli.dataModels.Search;
 
 import org.w3c.dom.Text;
@@ -24,10 +25,10 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.ViewHo
 
 
 
-    List<Merchant> merchantList;
+    List<MerchantDetails> merchantList;
 
 
-    public MerchantAdapter(List<Merchant> merchantList){
+    public MerchantAdapter(List<MerchantDetails> merchantList){
         this.merchantList = merchantList;
     }
 
@@ -43,16 +44,25 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.ViewHo
     public void onBindViewHolder(@NonNull MerchantAdapter.ViewHolder holder, int position) {
 
 
-        Merchant merchant=merchantList.get(position);
-        holder.merchantName.setText(merchant.getName());
-        holder.price.setText(Double.toString(merchant.getPrice()));
+        MerchantDetails merchant=merchantList.get(position);
+
+        String merchantName = merchant.getMerchantName();
+        String price = String.valueOf(merchant.getPrice());
+
+
+        holder.merchantName.setText(merchantName);
+        holder.price.setText("₹"+price);
+
+
+
 
         holder.rootView.setOnClickListener(v -> {
-            // write funcitonality to change the price based on merchant selection
+            // write funcitonality to change the price based on merchant sel ection
             Context context = v.getContext();
-            TextView txtView = (TextView) ((Activity)context).findViewById(R.id.tv_productPrice);
+            TextView txtView = (TextView) ((Activity)context).findViewById(R.id.tv_product_main_price);
             txtView.setText(Double.toString(merchant.getPrice()));
-
+            TextView inventoryId = (TextView)((Activity)context).findViewById(R.id.tv_inventory_id);
+            inventoryId.setText(Integer.toString(merchant.getInventoryItemId()));
         });
     }
 
@@ -73,6 +83,7 @@ public class MerchantAdapter extends RecyclerView.Adapter<MerchantAdapter.ViewHo
             super(itemView);
             rootView=itemView;
             merchantName=itemView.findViewById(R.id.tv_merchantName);
+
 
             price=itemView.findViewById(R.id.merchantPrice);
         }

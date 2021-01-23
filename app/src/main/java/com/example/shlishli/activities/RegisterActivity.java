@@ -14,10 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.shlishli.R;
+import com.example.shlishli.apiCalls.IApiCalls;
+import com.example.shlishli.dataModels.Customer;
+import com.example.shlishli.retrofit.networkManager.RetrofitBuilder;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+
+import retrofit2.Call;
+import retrofit2.Retrofit;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -39,19 +45,11 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister=(Button)findViewById(R.id.btn_register);
         progressDialog=new ProgressDialog(this);
         firebaseAuth=FirebaseAuth.getInstance();
-        btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                register();
-            }
-        });
-        tvClickToSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent=new Intent(RegisterActivity.this, EnterDetailsActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        btnRegister.setOnClickListener(v -> register());
+        tvClickToSignIn.setOnClickListener(v -> {
+            Intent intent=new Intent(RegisterActivity.this, EnterDetailsActivity.class);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -64,40 +62,46 @@ public class RegisterActivity extends AppCompatActivity {
             etEmail.setError("Enter Email");
             return;
         }
-        else if(TextUtils.isEmpty(checkPassword))
+        if(TextUtils.isEmpty(checkPassword))
         {
             etCheckPassword.setError("Password cannot be empty");
             return;
         }
-        else if(TextUtils.isEmpty(password))
+        if(TextUtils.isEmpty(password))
         {
             etPassword.setError("Password cannot be empty");
             return;
         }
-        else if(!password.equals(checkPassword))
+        if(!password.equals(checkPassword))
         {
             etPassword.setError("Passwords dont match");
             return;
         }
         progressDialog.setMessage("Please Wait....");
+
         progressDialog.show();
+
         progressDialog.setCanceledOnTouchOutside(false);
-        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful())
-                {
-                    Toast.makeText(RegisterActivity.this, "Successfully Registered", Toast.LENGTH_SHORT).show();
-                    Intent intent=new Intent(RegisterActivity.this,EnterDetailsActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-                else
-                {
-                    Toast.makeText(RegisterActivity.this, "Sign Up Failed!", Toast.LENGTH_SHORT).show();
-                }
-                progressDialog.dismiss();
+
+
+        firebaseAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(task -> {
+            if(task.isSuccessful())
+            {
+
+                Toast.makeText(RegisterActivity.this, "Help us get to know you better", Toast.LENGTH_SHORT).show();
+
+
+                Intent intent=new Intent(RegisterActivity.this,EnterDetailsActivity.class);
+
+
+                startActivity(intent);
+                finish();
             }
+            else
+            {
+                Toast.makeText(RegisterActivity.this, "Sign Up Failed!"+task.getException(), Toast.LENGTH_SHORT).show();
+            }
+            progressDialog.dismiss();
         });
     }
 }

@@ -1,10 +1,11 @@
-package com.example.shlishli.retrofit;
+package com.example.shlishli.retrofit.networkManager;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SearchRetrofitBuilder {
+
     private static Retrofit instance;
 
     private SearchRetrofitBuilder()
@@ -16,12 +17,12 @@ public class SearchRetrofitBuilder {
     {
         if(instance==null)
         {
-            synchronized (SearchRetrofitBuilder.class)
+            synchronized (RetrofitBuilder.class)
             {
                 if(instance==null)
                 {
                     instance=new Retrofit.Builder()
-                            .baseUrl("http://172.16.26.33:8081/")
+                            .baseUrl("http://localhost:8081/")
                             .addConverterFactory(GsonConverterFactory.create())
                             .client(new OkHttpClient())
                             .build();
@@ -31,3 +32,4 @@ public class SearchRetrofitBuilder {
         return instance;
     }
 }
+
